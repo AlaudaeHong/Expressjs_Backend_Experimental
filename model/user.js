@@ -5,11 +5,14 @@ var { compareSync, hashSync } = require("bcryptjs");
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        requires: true,
+        validate: {
+            validator: (username) => User.doesNotExist({ username }),
+            message: "Username already exists",
+        },
     },
     password: {
         type: String,
-        requires: true,
+        required: true,
     },
 });
 
@@ -28,4 +31,4 @@ UserSchema.methods.comparePasswords = function (password) {
 };
 
 const User = mongoose.model("User", UserSchema);
-module.exports =  User;
+module.exports = User;

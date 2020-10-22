@@ -1,6 +1,8 @@
+const { response } = require("express");
 var express = require("express");
 var User = require("../model/user");
 var { sessionizeUser } = require("../utils/session");
+var { SESS_NAME } = require("../config.json");
 
 const authRouter = express.Router();
 authRouter.post("/register", async function (req, res) {
@@ -14,7 +16,8 @@ authRouter.post("/register", async function (req, res) {
         req.session.user = sessionUser;
         res.send(sessionUser);
     } catch (err) {
-        res.status(400).send(parseError(err));
+        res.status(400).send(err);
+        console.log(err);
     }
 });
 
@@ -32,7 +35,7 @@ authRouter.post("/login", async function (req, res) {
             throw new Error("Invalid login credentials");
         }
     } catch (err) {
-        res.status(401).send(parseError(err));
+        res.status(401).send(err);
     }
 });
 
@@ -40,21 +43,26 @@ authRouter.delete("/logout", function ({ session }, res) {
     try {
         const user = session.user;
         if (user) {
-            session.destroy((err) => {
+            session.destroy(function (err) {
                 if (err) throw err;
                 res.clearCookie(SESS_NAME);
-                res.send(user);
+                res.send({ userId: null, username: null });
             });
         } else {
             throw new Error("Something went wrong");
         }
     } catch (err) {
-        res.status(422).send(parseError(err));
+        res.status(422).send(err);
+        console.log(err);
     }
 });
 
 authRouter.get("/", ({ session: { user } }, res) => {
-    res.send({ user });
+    if (user) {
+        res.send({ user });
+    } else {
+        res.send({ userId: null, username: null });
+    }
 });
 
 module.exports = authRouter;
