@@ -1,7 +1,0 @@
-{
-    "MONGO_URI": "mongodb+srv://alaudae:sB160p8pLH5zD2Pl@cluster0.bkz3n.gcp.mongodb.net/retryWrites=true&w=majority",
-    "NODE_ENV": "development",
-    "SESS_NAME": "sid",
-    "SESS_SECRET": "secret!session",
-    "SESS_LIFETIME": 720000
-}
