@@ -45,6 +45,7 @@ authRouter.delete("/logout", function ({ session }, res) {
     try {
         const user = session.user;
         if (user) {
+            console.log("logging out");
             session.destroy(function (err) {
                 if (err) throw err;
                 res.clearCookie(SESS_NAME);
@@ -61,7 +62,7 @@ authRouter.delete("/logout", function ({ session }, res) {
 
 authRouter.get("/", ({ session: { user } }, res) => {
     if (user) {
-        res.send({ user });
+        res.send(user);
     } else {
         res.send({ userId: null, username: null });
     }
