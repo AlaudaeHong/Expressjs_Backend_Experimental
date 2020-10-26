@@ -1,4 +1,12 @@
-const { response } = require("express");
+/*
+routes/auth.js: Route to process auth-related request
+Objective:
+    * to create a user
+    * to login a user
+    * to logout a user
+    * to check if a user is logged in
+    * forward error message to frontend
+*/
 var express = require("express");
 var User = require("../model/user");
 var { sessionizeUser } = require("../utils/session");
@@ -16,16 +24,14 @@ authRouter.post("/register", async function (req, res) {
         req.session.user = sessionUser;
         res.send(sessionUser);
     } catch (err) {
-        res.status(400).send(err);
-        console.log(err);
+        res.status(400).send(err.message);
+        console.log(err.message);
     }
 });
 
 authRouter.post("/login", async function (req, res) {
     try {
         const { username, password } = req.body;
-
-        console.log({ username, password });
 
         const user = await User.findOne({ username });
         if (user && user.comparePasswords(password)) {
@@ -37,7 +43,7 @@ authRouter.post("/login", async function (req, res) {
             throw new Error("Invalid login credentials");
         }
     } catch (err) {
-        res.status(401).send(err);
+        res.status(401).send(err.message);
     }
 });
 
@@ -45,7 +51,6 @@ authRouter.delete("/logout", function ({ session }, res) {
     try {
         const user = session.user;
         if (user) {
-            console.log("logging out");
             session.destroy(function (err) {
                 if (err) throw err;
                 res.clearCookie(SESS_NAME);
@@ -55,8 +60,8 @@ authRouter.delete("/logout", function ({ session }, res) {
             throw new Error("Something went wrong");
         }
     } catch (err) {
-        res.status(422).send(err);
-        console.log(err);
+        res.status(422).send(err.message);
+        console.log(err.message);
     }
 });
 
