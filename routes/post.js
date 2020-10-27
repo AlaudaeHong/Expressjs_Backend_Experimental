@@ -25,6 +25,7 @@ postRouter.post("/upload", async function (req, res) {
                 author: user.username,
                 catalog,
                 content,
+                timestamp: Date.now(),
             });
             await newPost.save();
             res.send("received!");
