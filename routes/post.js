@@ -61,4 +61,28 @@ postRouter.get("/:postid", async function (req, res) {
     }
 });
 
+postRouter.post("/:postid", async function (req, res) {
+    try {
+        /* Get reference in database */
+        const { postid } = req.params;
+        const apost = await Post.findById(postid);
+
+        const { title, content, catalog } = req.body;
+
+        const user = req.session.user;
+
+        console.log({title, content, catalog});
+
+        if (user && user.username === apost.author) {
+            await Post.findByIdAndUpdate(postid, {title, content, catalog});
+            res.send("received!");
+        } else {
+            throw new Error("Unauthorized");
+        }
+    } catch (err) {
+        res.status(400).send(err.message);
+        console.log(err.message);
+    }
+});
+
 module.exports = postRouter;
