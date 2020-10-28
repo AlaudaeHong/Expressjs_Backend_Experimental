@@ -71,8 +71,6 @@ postRouter.post("/:postid", async function (req, res) {
 
         const user = req.session.user;
 
-        console.log({title, content, catalog});
-
         if (user && user.username === apost.author) {
             await Post.findByIdAndUpdate(postid, {title, content, catalog});
             res.send("received!");
