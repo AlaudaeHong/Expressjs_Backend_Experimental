@@ -28,7 +28,7 @@ postRouter.post("/upload", async function (req, res) {
                 timestamp: Date.now(),
             });
             await newPost.save();
-            res.send("received!");
+            res.send({_id: newPost.id});
         } else {
             throw new Error("Not logged in");
         }
