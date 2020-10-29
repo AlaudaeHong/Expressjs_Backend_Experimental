@@ -28,12 +28,12 @@ postRouter.post("/upload", async function (req, res) {
                 timestamp: Date.now(),
             });
             await newPost.save();
-            res.send({_id: newPost.id});
+            res.send({ _id: newPost.id });
         } else {
             throw new Error("Not logged in");
         }
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(401).send(err.message);
         console.log(err.message);
     }
 });
@@ -72,13 +72,32 @@ postRouter.post("/:postid", async function (req, res) {
         const user = req.session.user;
 
         if (user && user.username === apost.author) {
-            await Post.findByIdAndUpdate(postid, {title, content, catalog});
-            res.send("received!");
+            await Post.findByIdAndUpdate(postid, { title, content, catalog });
+            res.send({status: "uploaded"});
         } else {
             throw new Error("Unauthorized");
         }
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(401).send(err.message);
+        console.log(err.message);
+    }
+});
+
+postRouter.delete("/remove/:postid", async function (req, res) {
+    try {
+        const { postid } = req.params;
+        const apost = await Post.findById(postid);
+        const user = req.session.user;
+
+        if (user && apost && user.username === apost.author){
+            await Post.findByIdAndRemove(postid);
+            res.send({status: "removed"});
+        } else {
+            throw new Error("Unauthorized");
+        }
+
+    } catch (err) {
+        res.status(401).send(err.message);
         console.log(err.message);
     }
 });
