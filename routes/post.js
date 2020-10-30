@@ -14,6 +14,7 @@ var Post = require("../model/post");
 
 const postRouter = express.Router();
 
+// To upload a post
 postRouter.post("/upload", async function (req, res) {
     try {
         const { title, content, catalog } = req.body;
@@ -50,6 +51,7 @@ postRouter.get("/", async function (req, res) {
     }
 });
 
+// To get a specific post by postId
 postRouter.get("/:postid", async function (req, res) {
     try {
         const { postid } = req.params;
@@ -61,6 +63,7 @@ postRouter.get("/:postid", async function (req, res) {
     }
 });
 
+// To modify a specific post by postId
 postRouter.post("/:postid", async function (req, res) {
     try {
         /* Get reference in database */
@@ -83,6 +86,7 @@ postRouter.post("/:postid", async function (req, res) {
     }
 });
 
+// To remove a specific post by postId
 postRouter.delete("/remove/:postid", async function (req, res) {
     try {
         const { postid } = req.params;

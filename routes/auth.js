@@ -13,6 +13,8 @@ var { sessionizeUser } = require("../utils/session");
 var { SESS_NAME } = require("../config.json");
 
 const authRouter = express.Router();
+
+// To register a user
 authRouter.post("/register", async function (req, res) {
     try {
         const { username, password } = req.body;
@@ -29,6 +31,7 @@ authRouter.post("/register", async function (req, res) {
     }
 });
 
+// To login a user
 authRouter.post("/login", async function (req, res) {
     try {
         const { username, password } = req.body;
@@ -47,6 +50,7 @@ authRouter.post("/login", async function (req, res) {
     }
 });
 
+// To logout a user
 authRouter.delete("/logout", function ({ session }, res) {
     try {
         const user = session.user;
@@ -65,6 +69,7 @@ authRouter.delete("/logout", function ({ session }, res) {
     }
 });
 
+// To get user information by session
 authRouter.get("/", ({ session: { user } }, res) => {
     if (user) {
         res.send(user);
