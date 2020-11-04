@@ -1,0 +1,46 @@
+upstream websocket {
+    server 127.0.0.1:9000;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name url;
+
+
+    set $RootLoc [Root Directory];
+
+    root $RootLoc;
+    index index.html;
+
+    location /ws {
+            proxy_pass http://websocket;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+    }
+
+    location /api {
+            proxy_pass http://localhost:10000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name url;
+
+    return 301 https://url$request_uri;
+}

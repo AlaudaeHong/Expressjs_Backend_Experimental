@@ -11,6 +11,7 @@ feature if time permits.
 * Express.js
 * bcryptjs
 * Express-Session
+* pm2 for Deployment
 
 ## Currently Functionality
 ### Basic Auth System
