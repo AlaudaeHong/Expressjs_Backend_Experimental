@@ -6,7 +6,6 @@ const path = require("path");
 var File = require("../model/file");
 
 var { uploadPath, rootPath } = require("../config.json");
-const { fdatasync } = require("fs");
 
 // https://stackoverflow.com/questions/25698176/how-to-set-different-destinations-in-nodejs-using-multer
 let upload = multer({
@@ -30,15 +29,32 @@ const fileRouter = express.Router();
 fileRouter.post("/upload", upload.single("image"), async function (req, res) {
     try {
         const { file } = req;
+        const user = req.session.user;
 
-        const newFile = new File({
-            filename: file.filename,
-            filepath: path.posix.join(uploadPath, `${file.mimetype}`, file.filename),
-            type: file.mimetype,
-        });
+        if (user && user.userId) {
+            const newFile = new File({
+                filename: file.filename,
+                filepath: path.posix.join(
+                    uploadPath,
+                    `${file.mimetype}`,
+                    file.filename
+                ),
+                type: file.mimetype,
+            });
 
-        await newFile.save();
-        res.send({ _id: newFile.id });
+            await newFile.save();
+            res.send({ _id: newFile.id });
+        }
+    } catch (err) {
+        res.status(400).send(err.message);
+        console.log(err.message);
+    }
+});
+
+fileRouter.get("/", async function (req, res) {
+    try {
+        const allFileMeta = await File.find({});
+        res.send(allFileMeta);
     } catch (err) {
         res.status(400).send(err.message);
         console.log(err.message);
@@ -78,12 +94,14 @@ fileRouter.delete("/:fid", async function (req, res) {
         const { fid } = req.params;
         const afile = await File.findById(fid);
 
-        if (afile) {
+        const user = req.session.user;
+
+        if (afile && user && user.userId) {
             let filepath = path.posix.join(rootPath, afile.filepath);
             fs.unlinkSync(filepath);
             await File.findByIdAndRemove(fid);
 
-            res.send({status: "removed"});
+            res.send({ status: "removed" });
             console.log("remove file: " + fid);
         }
     } catch (err) {
