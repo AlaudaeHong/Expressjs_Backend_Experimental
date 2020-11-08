@@ -101,7 +101,7 @@ fileRouter.delete("/:fid", async function (req, res) {
             fs.unlinkSync(filepath);
             await File.findByIdAndRemove(fid);
 
-            res.send({ status: "removed" });
+            res.send({ status: "removed", _id: fid });
             console.log("remove file: " + fid);
         }
     } catch (err) {
