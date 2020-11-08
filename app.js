@@ -6,7 +6,12 @@ var logger = require("morgan");
 var connectStore = require("connect-mongo");
 var session = require("express-session");
 var db = require("./utils/database");
-var {SESS_NAME, SESS_SECRET, SESS_LIFETIME, NODE_ENV} = require("./config.json");
+var {
+    SESS_NAME,
+    SESS_SECRET,
+    SESS_LIFETIME,
+    NODE_ENV,
+} = require("./config.json");
 
 var cors = require("cors");
 
@@ -16,6 +21,8 @@ var fileRouter = require("./routes/file");
 
 var app = express();
 const MongoStore = connectStore(session);
+
+app.set("view engine", "jade");
 
 app.use(
     session({
