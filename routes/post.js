@@ -75,8 +75,13 @@ postRouter.post("/:postid", async function (req, res) {
         const user = req.session.user;
 
         if (user && user.username === apost.author) {
-            await Post.findByIdAndUpdate(postid, { title, content, catalog });
-            res.send({status: "uploaded"});
+            await Post.findByIdAndUpdate(postid, {
+                title,
+                content,
+                catalog,
+                timestamp: Date.now(),
+            });
+            res.send({ status: "uploaded" });
         } else {
             throw new Error("Unauthorized");
         }
@@ -93,13 +98,12 @@ postRouter.delete("/remove/:postid", async function (req, res) {
         const apost = await Post.findById(postid);
         const user = req.session.user;
 
-        if (user && apost && user.username === apost.author){
+        if (user && apost && user.username === apost.author) {
             await Post.findByIdAndRemove(postid);
-            res.send({status: "removed"});
+            res.send({ status: "removed" });
         } else {
             throw new Error("Unauthorized");
         }
-
     } catch (err) {
         res.status(401).send(err.message);
         console.log(err.message);
