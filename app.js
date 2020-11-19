@@ -18,6 +18,7 @@ var cors = require("cors");
 var authRouter = require("./routes/auth");
 var postRouter = require("./routes/post");
 var fileRouter = require("./routes/file");
+var customSettingRouter = require("./routes/customSetting");
 
 var app = express();
 const MongoStore = connectStore(session);
@@ -53,6 +54,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 app.use("/api/public", fileRouter);
+app.use("/api/custom", customSettingRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
