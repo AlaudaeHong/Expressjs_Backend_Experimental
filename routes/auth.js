@@ -15,7 +15,7 @@ var { SESS_NAME } = require("../config.json");
 const authRouter = express.Router();
 
 // To register a user
-authRouter.post("/register", async function (req, res) {
+/* authRouter.post("/register", async function (req, res) {
     try {
         const { username, password } = req.body;
 
@@ -29,7 +29,7 @@ authRouter.post("/register", async function (req, res) {
         res.status(400).send(err.message);
         console.log(err.message);
     }
-});
+}); */
 
 // To login a user
 authRouter.post("/login", async function (req, res) {

@@ -14,7 +14,7 @@ customSettingRouter.post("/", async function (req, res) {
 
             const customSetting = await Custom.findOne({});
             if (customSetting) {
-                await Custom.findOneAndUpdate({ banner });
+                await Custom.findOneAndUpdate({}, { banner });
             } else {
                 const newCustomSetting = new Custom({ banner });
                 await newCustomSetting.save();
